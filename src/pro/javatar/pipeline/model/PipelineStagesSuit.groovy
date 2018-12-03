@@ -24,12 +24,17 @@ import pro.javatar.pipeline.exception.UnrecognizedPipelineStagesSuitException
 enum PipelineStagesSuit {
 
     SERVICE,
+    SERVICE_WITH_DB,
     LIBRARY
 
     static PipelineStagesSuit fromString(String suit) {
         if (suit == null) {
             throw new UnrecognizedPipelineStagesSuitException("suit is null")
         }
+        if ("service-with-db".equalsIgnoreCase(suit) || "µservice-with-db".equalsIgnoreCase(suit)) {
+            return SERVICE_WITH_DB;
+        }
+
         if("service".equalsIgnoreCase(suit) || "µservice".equalsIgnoreCase(suit)
                 || "ui".equalsIgnoreCase(suit)) {
             return SERVICE
