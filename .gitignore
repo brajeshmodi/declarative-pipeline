@@ -4,7 +4,6 @@
 .DS_Store
 dep.tree
 
-## Directory-based project format:
 .idea/
 .idea
 target/
@@ -30,11 +29,9 @@ target/
 # Mongo Explorer plugin:
 # .idea/mongoSettings.xml
 
-## File-based project format:
 *.ipr
 *.iws
 
-## Plugin-specific files:
 
 # IntelliJ
 /out/
@@ -55,4 +52,3 @@ crashlytics-build.properties
 target/sonar/
 */target/*
 */target/**
-dep.tree

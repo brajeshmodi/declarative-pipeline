@@ -17,6 +17,8 @@ package pro.javatar.pipeline.model
 
 import pro.javatar.pipeline.exception.UnrecognizedPipelineStagesSuitException
 
+import static pro.javatar.pipeline.util.Utils.isBlank
+
 /**
  * @author Borys Zora
  * @since 2018-03-09
@@ -25,7 +27,8 @@ enum PipelineStagesSuit {
 
     SERVICE,
     SERVICE_WITH_DB,
-    LIBRARY
+    LIBRARY,
+    CUSTOM
 
     static PipelineStagesSuit fromString(String suit) {
         if (suit == null) {
@@ -34,8 +37,7 @@ enum PipelineStagesSuit {
         if ("service-with-db".equalsIgnoreCase(suit) || "µservice-with-db".equalsIgnoreCase(suit)) {
             return SERVICE_WITH_DB;
         }
-
-        if("service".equalsIgnoreCase(suit) || "µservice".equalsIgnoreCase(suit)
+        if("service".equalsIgnoreCase(suit) || "µService".equalsIgnoreCase(suit)
                 || "ui".equalsIgnoreCase(suit)) {
             return SERVICE
         }
@@ -43,6 +45,9 @@ enum PipelineStagesSuit {
                 || "component".equalsIgnoreCase(suit)
                 || "ui-component".equalsIgnoreCase(suit)) {
             return LIBRARY
+        }
+        if("custom".equalsIgnoreCase(suit) || isBlank(suit)) {
+            return CUSTOM
         }
         throw new UnrecognizedPipelineStagesSuitException("suit ${suit} is not recognized")
     }
