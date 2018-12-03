@@ -293,6 +293,23 @@ class FlowBuilder implements Serializable {
         return this
     }
 
+    FlowBuilder addDBBackwardCompatibilityPipelineStages() {
+        addPipelineStage(StageType.BUILD_AND_UNIT_TESTS)
+        addPipelineStage(StageType.DEPLOY_ON_DEV_ENV)
+        addPipelineStage(StageType.AUTO_TESTS)
+        addPipelineStage(StageType.BACKWARD_COMPATIBILITY_TEST)
+        addPipelineStage(StageType.DEPLOY_ON_DEV_ENV)
+        addPipelineStage(StageType.AUTO_TESTS)
+        addPipelineStage(StageType.DEV_SIGN_OFF)
+        addPipelineStage(StageType.RELEASE)
+        addPipelineStage(StageType.DEPLOY_ON_QA_ENV)
+        addPipelineStage(StageType.QA_SIGN_OFF)
+//        addPipelineStage(StageType.DEPLOY_ON_STAGING_ENV)
+        addPipelineStage(StageType.DEVOPS_SIGN_OFF)
+        addPipelineStage(StageType.DEPLOY_ON_PROD_ENV)
+        return this
+    }
+
     FlowBuilder addReleaseCommonLibsPipelineStages() {
         addPipelineStage(StageType.BUILD_AND_UNIT_TESTS)
         addPipelineStage(StageType.AUTO_TESTS)
