@@ -16,6 +16,7 @@
 package pro.javatar.pipeline.stage
 
 import org.codehaus.groovy.util.ReleaseInfo
+import pro.javatar.pipeline.service.webhook.WebhookReceiverService
 
 import static pro.javatar.pipeline.service.PipelineDslHolder.dsl
 /**
@@ -26,15 +27,18 @@ class BackwardCompatibilityTestStage extends Stage {
 
     ReleaseInfo info
 
-    BackwardCompatibilityTestStage(ReleaseInfo info) {
+    WebhookReceiverService webhookReceiverService;
+
+    BackwardCompatibilityTestStage(ReleaseInfo info, WebhookReceiverService webhookReceiverService) {
         this.info = info
+        this.webhookReceiverService = webhookReceiverService
     }
 
     @Override
     void execute() throws Exception {
         dsl.echo "BackwardCompatibilityTestStage execute started: ${toString()}"
         dsl.timeout(time: 10, unit: 'MINUTES') {
-            // todo: decide how to find previous release version
+            def previousReleaseVersion = webhookReceiverService.getPreviousReleaseVersion(releaseInfo.serviceName)
             // todo: and how pass it to next stages
         }
         dsl.echo "BackwardCompatibilityTestStage execute finished"

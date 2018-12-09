@@ -26,6 +26,8 @@ import pro.javatar.pipeline.service.test.*
 import pro.javatar.pipeline.service.orchestration.*
 import pro.javatar.pipeline.service.impl.*
 import pro.javatar.pipeline.service.vcs.RevisionControlService
+import pro.javatar.pipeline.service.webhook.WebhookReceiverService
+import pro.javatar.pipeline.service.webhook.WebhookReceiverServiceImpl
 import pro.javatar.pipeline.stage.*
 import pro.javatar.pipeline.stage.deploy.*
 import pro.javatar.pipeline.stage.sign.*
@@ -73,6 +75,7 @@ class FlowBuilder implements Serializable {
     SonarQubeService sonarQubeService
     SwaggerService swaggerService
     PipelineStagesSuit suit
+    WebhookReceiverService webhookReceiverService
 
     FlowBuilder() {}
 
@@ -123,6 +126,7 @@ class FlowBuilder implements Serializable {
         dockerMavenBuildService = new DockerMavenBuildService(mavenBuildService, dockerService)
         setupBuildService()
         cdnDeploymentService = new CdnDeploymentService(releaseInfo.getServiceName(), mavenBuildService, buildService)
+        webhookReceiverService = new WebhookReceiverServiceImpl()
         deploymentService = getAppropriateDeploymentService(buildType)
         autoTestsService = getAutoTestsService()
         releaseService = getReleaseService()
@@ -296,6 +300,9 @@ class FlowBuilder implements Serializable {
         suit = PipelineStagesSuit.fromString(pipelineStagesSuit)
         if (suit == PipelineStagesSuit.SERVICE) {
             return addDefaultPipelineStages()
+        }
+        if (suit == PipelineStagesSuit.SERVICE_WITH_DB) {
+            return addDBBackwardCompatibilityPipelineStages()
         }
         if (suit == PipelineStagesSuit.LIBRARY) {
             return addReleaseCommonLibsPipelineStages()
@@ -482,6 +489,7 @@ class FlowBuilder implements Serializable {
         ServiceContextHolder.addService(sonarQubeService)
         ServiceContextHolder.addService(swaggerService)
         ServiceContextHolder.addService(dockerNpmBuildService)
+        ServiceContextHolder.addService(webhookReceiverService)
     }
 
     @Override
@@ -511,6 +519,7 @@ class FlowBuilder implements Serializable {
                 ", slackService=" + slackService +
                 ", sonarQubeService=" + sonarQubeService +
                 ", swaggerService=" + swaggerService +
+                ", webhookReceiverService=" + webhookReceiverService +
                 '}';
     }
 }
